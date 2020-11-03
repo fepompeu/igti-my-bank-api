@@ -10,7 +10,7 @@ router.get("/4/:agencia/:conta/:valor", async (req, res, next) => {
     const account = await accountsModel.findOne({ agencia, conta });
 
     if (!account) {
-      res.status(404).send("Account not found");
+      return res.status(404).send("Account not found");
     }
 
     const { name, balance } = account;
@@ -35,8 +35,7 @@ router.get("/5/:agencia/:conta/:valor", async (req, res, next) => {
     const account = await accountsModel.findOne({ agencia, conta });
 
     if (!account) {
-      res.status(404).send("Account not found");
-      return;
+      return res.status(404).send("Account not found");
     }
 
     const { name, balance } = account;
@@ -44,8 +43,7 @@ router.get("/5/:agencia/:conta/:valor", async (req, res, next) => {
     const newBalance = balance - (parseInt(valor) + 1);
 
     if (newBalance < 0) {
-      res.status(400).send("Account doesn't have enough balance");
-      return;
+      return res.status(400).send("Account doesn't have enough balance");
     }
 
     const accountUpdated = await accountsModel.findOneAndUpdate(
@@ -66,8 +64,7 @@ router.get("/getBalance/:agencia/:conta", async (req, res, next) => {
     const account = await accountsModel.findOne({ agencia, conta });
 
     if (!account) {
-      res.status(404).send("Account not found");
-      return;
+      return res.status(404).send("Account not found");
     }
 
     res.send(account);
@@ -83,7 +80,7 @@ router.get("/deleteAccount/:agencia/:conta", async (req, res, next) => {
 
     const activatedAccounts = await accountsModel.find({ agencia });
 
-    res.send({ activatedAccounts: activatedAccounts });
+    res.send({ activatedAccounts: activatedAccounts.length });
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -97,8 +94,7 @@ router.get("/transfer/:conta1/:conta2/:valor", async (req, res, next) => {
     let account2 = await accountsModel.findOne({ conta: conta2 });
 
     if (!account1 || !account2) {
-      res.status(404).send("Account not found");
-      return;
+      return res.status(404).send("Account not found");
     }
 
     let deductValue = 0;
@@ -110,8 +106,7 @@ router.get("/transfer/:conta1/:conta2/:valor", async (req, res, next) => {
     }
 
     if (account1.balance < deductValue) {
-      res.status(400).send("Account doesn't have enough balance");
-      return;
+      return res.status(400).send("Account doesn't have enough balance");
     }
 
     account1.balance = account1.balance - deductValue;
@@ -136,8 +131,7 @@ router.get("/averageAgency/:agencia", async (req, res, next) => {
     const accounts = await accountsModel.find({ agencia });
 
     if (!accounts.length) {
-      res.status(404).send("Agency not found");
-      return;
+      return res.status(404).send("Agency not found");
     }
 
     const agencyBalance = accounts.reduce((accumulator, current) => {
