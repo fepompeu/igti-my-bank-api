@@ -1,6 +1,6 @@
-import _ from "./env.js";
+import "./env.js";
 import app from "./src/config/custom-express.js";
 
-app.listen(3000, () => {
-  console.log("API Started!");
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
